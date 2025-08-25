@@ -24,6 +24,7 @@
     "typescript-eslint": "^8.40.0"
   },
   "dependencies": {
+    "@alwatr/parse-duration": "^5.5.7",
     "@types/cookie-parser": "^1.4.9",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
