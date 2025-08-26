@@ -10,8 +10,12 @@ export interface IResponse {
       | "LIMIT_FILE_SIZE"
       | "validation"
       | "create"
+      | "compare"
+      | "invalid"
+      | "noToken"
       | "others";
     message: string;
     data?: unknown;
+    token?: string;
   };
 }

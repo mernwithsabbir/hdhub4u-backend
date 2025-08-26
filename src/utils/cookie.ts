@@ -15,23 +15,14 @@ const setCookieOption = () => {
   };
 };
 
-export const setAuthCookies = (
-  res: Response,
-  accessToken: string,
-  refreshToken: string
-) => {
-  const AccessExp = parseDuration(config.ACCESS_TOKEN_EXPIRES_IN as Duration);
-  const RefreshExp = parseDuration(config.REFRESH_TOKEN_EXPIRES_IN as Duration);
-  res.cookie("accessToken", accessToken, {
+export const setAuthCookies = (res: Response, token: string) => {
+  const AccessExp = parseDuration(config.JWT_EXPIRES_IN as Duration);
+
+  res.cookie("token", token, {
     ...setCookieOption(),
     maxAge: AccessExp,
   });
-  res.cookie("refreshToken", refreshToken, {
-    ...setCookieOption(),
-    maxAge: RefreshExp,
-  });
 };
 export const clearAuthCookies = (res: Response) => {
-  res.clearCookie("accessToken", setCookieOption());
-  res.clearCookie("refreshToken", setCookieOption());
+  res.clearCookie("token", setCookieOption());
 };

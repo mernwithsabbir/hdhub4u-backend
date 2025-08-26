@@ -1,6 +1,14 @@
-import { RegisterDto, registerValidate } from "../dto/authDto";
+import { Response } from "express";
+import {
+  LoginDto,
+  loginValidate,
+  RegisterDto,
+  registerValidate,
+} from "../dto/authDto";
 import UserModel, { IUser } from "../model/userModel";
 import { IResponse } from "../types/response";
+import { clearAuthCookies, setAuthCookies } from "../utils/cookie";
+import { signAccessToken } from "../utils/jwt";
 
 export const registerService = async (value: Partial<IUser>) => {
   const validate = registerValidate.safeParse(value);
@@ -33,13 +41,16 @@ export const registerService = async (value: Partial<IUser>) => {
     };
   }
 
-  const create = await UserModel.create({
-    username: data.username,
-    email: data.email,
-    password: data.password,
-    role: data.role,
-    isVerify: data.isVerify,
-  });
+  const create = await UserModel.create(
+    {
+      username: data.username,
+      email: data.email,
+      password: data.password,
+      role: data.role,
+      isVerify: data.isVerify,
+    },
+    { password: 0 }
+  );
   if (!create) {
     return <IResponse>{
       status: 400,
@@ -55,34 +66,93 @@ export const registerService = async (value: Partial<IUser>) => {
     json: {
       success: true,
       message: "User Register Successfully!",
-      data: data,
+      data: create,
     },
   };
 };
-export const loginService = async (data: Partial<IUser>) => {
-  try {
-    return data;
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Internal Server Error";
-    throw new Error(message);
+export const loginService = async (value: Partial<IUser>, res: Response) => {
+  const validate = loginValidate.safeParse(value);
+  if (!validate.success) {
+    return <IResponse>{
+      status: 400,
+      json: {
+        success: false,
+        errorType: "dto",
+        message: "Validation Fail!",
+        data: validate.error.flatten().fieldErrors,
+      },
+    };
   }
+  const existUser = await UserModel.findOne({
+    email: value.email,
+  }).select("+password");
+
+  if (!existUser) {
+    return <IResponse>{
+      status: 400,
+      json: {
+        success: false,
+        errorType: "exist",
+        message: "User Email Not Exist!try Another Email Address.",
+      },
+    };
+  }
+  const data = validate.data as LoginDto;
+  const compare = existUser?.comparePassword(data.password);
+  if (!compare) {
+    return <IResponse>{
+      status: 400,
+      json: {
+        success: false,
+        errorType: "compare",
+        message: "Invalid Password!Please Enter Correct Password.",
+      },
+    };
+  }
+
+  const token = signAccessToken(existUser);
+
+  setAuthCookies(res, token);
+  return <IResponse>{
+    status: 200,
+    json: {
+      success: true,
+      message: "User Login Successfully.",
+      token: token,
+    },
+  };
 };
-export const refreshTokenService = async (token: { token: string }) => {
-  try {
-    return token;
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Internal Server Error";
-    throw new Error(message);
+export const logoutService = async (userId: string, res: Response) => {
+  if (!userId) {
+    return <IResponse>{
+      status: 400,
+      json: {
+        success: false,
+        errorType: "invalid",
+        message: "User Not Found!",
+        data: "Invalid User.Logout Fail!",
+      },
+    };
   }
-};
-export const logoutService = async (token: { token: string }) => {
-  try {
-    return token;
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Internal Server Error";
-    throw new Error(message);
+  const existUser = await UserModel.findById(userId);
+
+  if (!existUser) {
+    return <IResponse>{
+      status: 400,
+      json: {
+        success: false,
+        errorType: "exist",
+        message: "Invalid User Credential!",
+      },
+    };
   }
+
+  clearAuthCookies(res);
+  return <IResponse>{
+    status: 200,
+    json: {
+      success: true,
+      message: "User Logout Successfully!",
+    },
+  };
 };

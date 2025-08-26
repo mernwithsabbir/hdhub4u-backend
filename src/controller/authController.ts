@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
 import {
   loginService,
-  refreshTokenService,
+  logoutService,
   registerService,
 } from "../service/authService";
 import { IResponse } from "../types/response";
@@ -26,28 +26,11 @@ export const loginUser = async (
   next: NextFunction
 ) => {
   try {
-    const result = (await loginService(req.body)) as IResponse;
+    const result = (await loginService(req.body, res)) as IResponse;
     res.status(result.status).json(result.json);
   } catch (error) {
     void error;
     next(createHttpError(400, "Field To Login User!"));
-  }
-};
-export const refreshToken = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const result = await refreshTokenService(req.cookies?.accessToken);
-    res.status(200).json({
-      success: true,
-      message: "User refreshToken Successfully!",
-      data: result,
-    });
-  } catch (error) {
-    void error;
-    next(createHttpError(400, "Field To refreshToken User!"));
   }
 };
 export const logoutUser = async (
@@ -56,12 +39,11 @@ export const logoutUser = async (
   next: NextFunction
 ) => {
   try {
-    const result = await refreshTokenService(req.cookies?.accessToken);
-    res.status(200).json({
-      success: true,
-      message: "User Logout Successfully!",
-      data: result,
-    });
+    const result = (await logoutService(
+      req.user?.userId as string,
+      res
+    )) as unknown as IResponse;
+    res.status(result.status).json(result.json);
   } catch (error) {
     void error;
     next(createHttpError(400, "Field To Logout User!"));
