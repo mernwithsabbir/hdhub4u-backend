@@ -12,7 +12,7 @@ app.use(helmet());
 app.use(hpp());
 app.use(cors());
 
-app.use(rateLimit({ windowMs: 15 * 60 * 1000, limit: 30 }));
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 30 }));
 app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
@@ -23,4 +23,5 @@ app.use(apiRouter);
 // Global Error Handler
 app.use(NotFound);
 app.use(errorHandler);
+
 export default app;

@@ -1,31 +1,32 @@
 {
-  "name": "hdhub4u-backend",
+  "name": "hdhub4u-backend-2",
   "version": "1.0.0",
-  "description": "This Is Hdhub4u Backend Project Using Nodejs Expressjs mongoose",
-  "main": "dist/server.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/server.ts"
   },
-  "author": "Sabbir Hossain <programingwithsabbir@gmail.com>",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.34.0",
     "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/hpp": "^0.2.6",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^24.3.0",
     "eslint": "^9.34.0",
     "globals": "^16.3.0",
     "jiti": "^2.5.1",
     "nodemon": "^3.1.10",
-    "ts-node": "^10.9.2",
     "typescript-eslint": "^8.40.0"
   },
   "dependencies": {
     "@alwatr/parse-duration": "^5.5.7",
-    "@types/cookie-parser": "^1.4.9",
+    "@types/node": "^24.3.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -36,6 +37,8 @@
     "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.0",
-    "uuid": "^11.1.0"
+    "ts-node": "^10.9.2",
+    "uuid": "^11.1.0",
+    "zod": "^4.1.1"
   }
 }
