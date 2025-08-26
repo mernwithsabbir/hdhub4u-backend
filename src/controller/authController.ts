@@ -20,6 +20,7 @@ export const registerUser = async (
     next(createHttpError(400, "Field To Register User!"));
   }
 };
+
 export const loginUser = async (
   req: Request,
   res: Response,
@@ -33,6 +34,7 @@ export const loginUser = async (
     next(createHttpError(400, "Field To Login User!"));
   }
 };
+
 export const logoutUser = async (
   req: Request,
   res: Response,

@@ -5,13 +5,20 @@ import {
   getSingleUser,
   updateUser,
 } from "../controller/userController";
+import { Authenticated } from "../middleware/AuthMiddleware";
+import { authorizeRole } from "../middleware/AuthorizedRole";
 
 const userRouter = express.Router();
 
 //! Role : Admin Managed Routes
-userRouter.delete("/deleteUser", deleteUser);
+userRouter.delete(
+  "/deleteUser/:id",
+  Authenticated,
+  authorizeRole(["admin"]),
+  deleteUser
+);
 
 //? Role : User Managed Routes
-userRouter.put("/updateUser/:id", updateUser);
-userRouter.get("/getSingleUser/:id", getSingleUser);
+userRouter.put("/updateUser/:id", Authenticated, updateUser);
+userRouter.get("/getSingleUser/:id", Authenticated, getSingleUser);
 export default userRouter;

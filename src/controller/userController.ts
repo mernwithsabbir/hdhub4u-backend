@@ -5,6 +5,7 @@ import {
   getSingleUserService,
   updateUserService,
 } from "../service/userService";
+import { IResponse } from "../types/response";
 
 // ! Role : Admin Manage Functionality
 
@@ -14,14 +15,13 @@ export const deleteUser = async (
   next: NextFunction
 ) => {
   try {
-    await deleteUserService(req.params?.id);
-    res.status(200).json({
-      success: true,
-      message: "User Deleted Successfully!",
-    });
+    const result = (await deleteUserService(
+      req.params?.id
+    )) as unknown as IResponse;
+    res.status(result.status).json(result.json);
   } catch (error) {
     void error;
-    next(createHttpError(400, "Field To Register User!"));
+    next(createHttpError(400, "Field To Delete User!"));
   }
 };
 
@@ -32,14 +32,12 @@ export const getSingleUser = async (
   next: NextFunction
 ) => {
   try {
-    await getSingleUserService(req.params?.id);
-    res.status(200).json({
-      success: true,
-      message: "User Deleted Successfully!",
-    });
+    const result = (await getSingleUserService(req.params?.id)) as IResponse;
+    res.status(result.status).json(result.json);
   } catch (error) {
-    void error;
-    next(createHttpError(400, "Field To Register User!"));
+    console.log(error);
+
+    next(createHttpError(400, "Field To Get Single User!"));
   }
 };
 export const updateUser = async (
@@ -48,14 +46,15 @@ export const updateUser = async (
   next: NextFunction
 ) => {
   try {
-    await updateUserService(req.params?.id);
+    const result = (await updateUserService(
+      req.params?.id,
+      req.body
+    )) as IResponse;
 
-    res.status(200).json({
-      success: true,
-      message: "User Updated Successfully!",
-    });
+    res.status(result.status).json(result.json);
   } catch (error) {
-    void error;
-    next(createHttpError(400, "Field To Register User!"));
+    console.log(error);
+
+    next(createHttpError(400, "Field To Update User!"));
   }
 };

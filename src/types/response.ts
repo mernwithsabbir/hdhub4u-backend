@@ -13,6 +13,7 @@ export interface IResponse {
       | "compare"
       | "invalid"
       | "noToken"
+      | "notFound"
       | "others";
     message: string;
     data?: unknown;
