@@ -18,6 +18,7 @@
     "@types/express": "^5.0.3",
     "@types/hpp": "^0.2.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.0.0",
     "eslint": "^9.34.0",
     "globals": "^16.3.0",
     "jiti": "^2.5.1",
@@ -37,6 +38,7 @@
     "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.0",
+    "multer": "^2.0.2",
     "ts-node": "^10.9.2",
     "uuid": "^11.1.0",
     "zod": "^4.1.1"

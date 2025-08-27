@@ -3,6 +3,7 @@ import createHttpError from "http-errors";
 import {
   deleteUserService,
   getSingleUserService,
+  updateAvatarUserService,
   updateUserService,
 } from "../service/userService";
 import { IResponse } from "../types/response";
@@ -56,5 +57,23 @@ export const updateUser = async (
     console.log(error);
 
     next(createHttpError(400, "Field To Update User!"));
+  }
+};
+export const updateAvatarUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const result = (await updateAvatarUserService(
+      req.params?.id,
+      req.file!
+    )) as IResponse;
+
+    res.status(result.status).json(result.json);
+  } catch (error) {
+    console.log(error);
+
+    next(createHttpError(400, "Field To Update User Avatar!"));
   }
 };

@@ -21,5 +21,5 @@ export const errorHandler = (
 };
 
 export const NotFound = (req: Request, res: Response, next: NextFunction) => {
-  next(createHttpError(400, "Route Not Found!"));
+  next(createHttpError(404, "Route Not Found!"));
 };

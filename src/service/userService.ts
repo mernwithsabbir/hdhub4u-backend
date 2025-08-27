@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import UserModel, { IUser } from "../model/userModel";
 import { IResponse } from "../types/response";
 import { UpdateUserDto, updateUserValidate } from "../dto/authDto";
+import { safeUnlink } from "../utils/unlink";
 
 // ! Role : Admin Manage Functionality
 export const deleteUserService = async (id: string) => {
@@ -130,6 +131,45 @@ export const updateUserService = async (id: string, value: UpdateUserDto) => {
       success: true,
       message: "User Updated Successfully!",
       data: update,
+    },
+  };
+};
+export const updateAvatarUserService = async (
+  id: string,
+  file: Express.Multer.File
+) => {
+  const existUser = (await UserModel.findOne({
+    _id: new Types.ObjectId(id),
+  })) as IUser;
+  if (!existUser) {
+    if (file) {
+      await safeUnlink(file?.path);
+    }
+    return <IResponse>{
+      status: 400,
+      json: {
+        success: false,
+        errorType: "exist",
+        message: "User Not Found Invalid User Id!.",
+      },
+    };
+  }
+
+  if (existUser.avatar) {
+    await safeUnlink(`public/${existUser.avatar}`);
+  }
+  const imagePath = file
+    ? `avatar/${file.filename}`
+    : "avatar/default-avatar.jpg";
+
+  existUser.avatar = imagePath;
+  existUser.save();
+  return <IResponse>{
+    status: 200,
+    json: {
+      success: false,
+      message: "Successfully Update User Avatar!",
+      data: { avatar: imagePath },
     },
   };
 };

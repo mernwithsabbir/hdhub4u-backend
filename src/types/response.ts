@@ -14,6 +14,7 @@ export interface IResponse {
       | "invalid"
       | "noToken"
       | "notFound"
+      | "undefined"
       | "others";
     message: string;
     data?: unknown;
